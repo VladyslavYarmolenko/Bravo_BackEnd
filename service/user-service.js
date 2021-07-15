@@ -1,6 +1,5 @@
 const UserModel = require('../models/user-model');
 const bcrypt = require('bcrypt');
-// const uuid = require('uuid');
 const mailService = require('./mail-service');
 const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
@@ -9,6 +8,7 @@ const ApiError = require('../exeptions/api-error');
 
 class UserService {
     async login(email) {
+
         try {
             const candidate = await UserModel.findOne({email})
             if (!candidate) {
@@ -18,8 +18,8 @@ class UserService {
             const verificationCode =  Math.floor(100000 + Math.random() * 900000);
             candidate.verificationCode = verificationCode;
             candidate.codeCreatedAt = new Date().getTime();
-
-            await  candidate.save();
+            console.log('verificationCode', verificationCode)
+            await candidate.save();
 
             await mailService.sendActivationMail(email, verificationCode)
 
@@ -60,8 +60,8 @@ class UserService {
 
             return { status: 'success', data: candidate, ...tokens };
         } catch (e) {
-            console.log('ERROR', e)
-            return { success: false, message: e };
+
+            return { status: 'error', message: e };
         }
     }
 
@@ -97,9 +97,9 @@ class UserService {
     }
 
     async checkUser(email) {
-        console.log('EMIAL', email)
+
         const candidate = await UserModel.findOne({email});
-        console.log('candidate', candidate)
+
         return candidate;
     }
 }

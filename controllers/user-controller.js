@@ -9,6 +9,8 @@ class UserController {
         try {
             const { email } = req.body;
 
+            console.log(email);
+
             const loginResponse = await userService.login(email);
 
             // res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
@@ -73,7 +75,7 @@ class UserController {
             const email = req.query.email;
 
             const user = await userService.checkUser(email);
-            console.log('USER', user)
+            // console.log('USER', user)
             if (user) {
                 res.send({status: 'Authorized'});
                 // res.status(200)
